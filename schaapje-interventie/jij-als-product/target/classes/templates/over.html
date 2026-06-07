@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probleem — Jij Als Product</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/schaap.svg}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="nav">
+    <a class="nav-logo" th:href="@{/}">
+        <img th:src="@{/images/schaap.svg}" alt="Vee logo" height="70">
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <div class="nav-links" id="nav-links">
+        <a th:href="@{/}" th:classappend="${activePage == 'home'} ? 'active'">Calculator</a>
+        <a th:href="@{/tips}" th:classappend="${activePage == 'tips'} ? 'active'">Wat kan ik doen?</a>
+        <a th:href="@{/over}" th:classappend="${activePage == 'over'} ? 'active'">Probleem</a>
+    </div>
+</nav>
+
+<main>
+    <section class="hero hero--small">
+        <div class="hero-tag">Achtergrond</div>
+        <h1>Waarom dit<br>project bestaat</h1>
+    </section>
+
+    <section class="over-section">
+
+        <div class="over-block">
+            <h2>Het probleem</h2>
+            <p>Big Tech bedrijven zoals Meta, Google, TikTok en Amazon verdienen miljarden aan iets wat jij dagelijks gratis weggeeft: jouw aandacht, jouw gedrag en jouw data.</p>
+            <p>Terwijl jij scrolt, bouwt een algoritme een steeds gedetailleerder profiel van wie je bent, wat je wil, waar je bang voor bent en verkoopt dat door aan adverteerders. Jij bent niet de klant. Jij bent het product.</p>
+        </div>
+
+        <div class="quote-block">
+            <blockquote>
+                "Als je niet betaalt voor het product, dan ben jij het product."
+            </blockquote>
+            <cite>— Andrew Lewis (2010)</cite>
+        </div>
+
+        <div class="over-block">
+            <h2>Ontmenselijking door design</h2>
+            <p>Dit gaat verder dan alleen data. Het gaat om ontmenselijking: het reduceren van mensen tot klikken, engagement scores en advertentiedoelgroepen. Platforms zijn niet ontworpen om jou gelukkig te maken ze zijn ontworpen om jou zo lang mogelijk vast te houden.</p>
+            <p>Technieken als infinite scroll, variabele beloningssystemen (zoals een "like"), en gepersonaliseerde feeds zijn rechtstreeks geleend van gokautomaat-psychologie. Dit is geen toeval. Dit is ingenieur.</p>
+        </div>
+
+        <div class="stat-row">
+            <div class="stat-item">
+                <div class="stat-number">$134 mld</div>
+                <div class="stat-desc">Meta's advertentie-inkomsten in 2023 betaald door adverteerders, gegenereerd door jouw aandacht</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">6,5 uur</div>
+                <div class="stat-desc">Gemiddelde dagelijkse schermtijd van een Nederlandse jongere (18–24 jaar)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">7 jaar</div>
+                <div class="stat-desc">Gemiddeld wordt er zo veel van een leven aan sociale media besteed als dit gebruik aanhoudt</div>
+            </div>
+        </div>
+
+        <div class="cta-block">
+            <p>Klaar om te berekenen wat jij dagelijks weggeeft?</p>
+            <a th:href="@{/}" class="btn-secondary">Naar de calculator →</a>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>Een bewustwordingsinterventie over ontmenselijking door Big Tech.</p>
+</footer>
+
+<script th:src="@{/js/calculator.js}"></script>
+</body>
+</html>

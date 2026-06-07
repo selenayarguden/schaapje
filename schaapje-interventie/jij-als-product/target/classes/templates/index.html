@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Data calculator — Big Tech Bewustwordingscalculator</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/schaap.svg}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="nav">
+    <a class="nav-logo" th:href="@{/}">
+        <img th:src="@{/images/schaap.svg}" alt="Vee logo" height="70">
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <div class="nav-links" id="nav-links">
+        <a th:href="@{/}" th:classappend="${activePage == 'home'} ? 'active'">Calculator</a>
+        <a th:href="@{/tips}" th:classappend="${activePage == 'tips'} ? 'active'">Wat kan ik doen?</a>
+        <a th:href="@{/over}" th:classappend="${activePage == 'over'} ? 'active'">Probleem</a>
+    </div>
+</nav>
+
+<main>
+    <section class="hero">
+        <div class="hero-tag">Bewustwordingsinterventie</div>
+        <h1>Jij bent het product.<br>Hoeveel geef je weg?</h1>
+    </section>
+
+    <section class="calculator-section">
+        <form th:action="@{/bereken}" th:object="${input}" method="post">
+
+            <!-- OVER JOU — leeftijd eerst -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <span class="form-icon">👤</span>
+                    <h2>Over jou</h2>
+                </div>
+                <div class="slider-group">
+                    <label for="age">Leeftijd</label>
+                    <div class="slider-row">
+                        <input type="range" id="age" th:field="*{age}"
+                               min="13" max="70" step="1"
+                               oninput="syncVal(this, 'age-out', ' jaar')">
+                        <span class="slider-val" id="age-out"
+                              th:text="${input.age} + ' jaar'">25 jaar</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCHERMTIJD -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <span class="form-icon">📱</span>
+                    <h2>Gebruik per dag</h2>
+                </div>
+
+                <div class="slider-group">
+                    <label for="social">Instagram / TikTok / Reels</label>
+                    <div class="slider-row">
+                        <input type="range" id="social" th:field="*{socialMinutes}"
+                               min="0" max="240" step="5"
+                               oninput="syncVal(this, 'social-out', ' min')">
+                        <span class="slider-val" id="social-out"
+                              th:text="${input.socialMinutes} + ' min'">60 min</span>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="video">YouTube / Netflix / video</label>
+                    <div class="slider-row">
+                        <input type="range" id="video" th:field="*{videoMinutes}"
+                               min="0" max="240" step="5"
+                               oninput="syncVal(this, 'video-out', ' min')">
+                        <span class="slider-val" id="video-out"
+                              th:text="${input.videoMinutes} + ' min'">45 min</span>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="music">Spotify / Apple Music</label>
+                    <div class="slider-row">
+                        <input type="range" id="music" th:field="*{musicMinutes}"
+                               min="0" max="240" step="5"
+                               oninput="syncVal(this, 'music-out', ' min')">
+                        <span class="slider-val" id="music-out"
+                              th:text="${input.musicMinutes} + ' min'">40 min</span>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="maps">Google Maps / Uber</label>
+                    <div class="slider-row">
+                        <input type="range" id="maps" th:field="*{mapsMinutes}"
+                               min="0" max="120" step="5"
+                               oninput="syncVal(this, 'maps-out', ' min')">
+                        <span class="slider-val" id="maps-out"
+                              th:text="${input.mapsMinutes} + ' min'">10 min</span>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="picks">Telefoon oppakken (keer per dag)</label>
+                    <div class="slider-row">
+                        <input type="range" id="picks" th:field="*{phonePicks}"
+                               min="0" max="200" step="5"
+                               oninput="syncVal(this, 'picks-out', '×')">
+                        <span class="slider-val" id="picks-out"
+                              th:text="${input.phonePicks} + '×'">60×</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Bereken mijn kostprijs →</button>
+        </form>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="results-section" th:if="${result != null}">
+
+        <div th:if="${result.showWarning}" class="warning-bar">
+            ⚠️ <span th:text="${result.warningText}"></span>
+        </div>
+
+        <h2 class="results-title">Jouw werkelijke kostprijs</h2>
+
+        <!-- Tijd & geld metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Tijd per dag</div>
+                <div class="metric-value" th:text="${result.hoursPerDay} + ' uur'">—</div>
+                <div class="metric-sub">aan platforms</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Volledige dagen per jaar</div>
+                <div class="metric-value" th:text="${result.daysPerYear} + ' dagen'">—</div>
+                <div class="metric-sub">kwijt aan Big Tech</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Rest van je leven kwijt</div>
+                <div class="metric-value" th:text="${result.lifeYearsLost} + ' jaar'">—</div>
+                <div class="metric-sub">als dit gebruik aanhoudt</div>
+            </div>
+        </div>
+
+        <!-- GEDRAGSBEPALING — schokkend blok -->
+        <div class="behaviour-block">
+            <div class="behaviour-header">
+                <span class="behaviour-icon">🧠</span>
+                <div>
+                    <h3>Zonder dat jij het wist, werd jouw gedrag bepaald</h3>
+                    <p class="behaviour-intro">Algoritmes sturen jouw keuzes actief bij welk nummer je hoort, welke route je rijdt, wat je denkt te willen. Dit zijn geen toevallige suggesties.</p>
+                </div>
+            </div>
+
+            <div class="behaviour-metrics">
+                <div class="behaviour-stat">
+                    <div class="behaviour-number" th:text="${result.behaviourNudgesPerDay}">—</div>
+                    <div class="behaviour-label">keer vandaag</div>
+                </div>
+                <div class="behaviour-stat">
+                    <div class="behaviour-number" th:text="${#numbers.formatInteger(result.behaviourNudgesPerYear, 1, 'POINT')}">—</div>
+                    <div class="behaviour-label">keer dit jaar</div>
+                </div>
+                <div class="behaviour-stat behaviour-stat--big">
+                    <div class="behaviour-number" th:text="${#numbers.formatInteger(result.behaviourNudgesLifetime, 1, 'POINT')}">—</div>
+                    <div class="behaviour-label">keer in de rest van je leven</div>
+                </div>
+            </div>
+
+            <div class="behaviour-examples">
+                <div class="behaviour-example">
+                    <span class="bex-icon">📱</span>
+                    <p th:text="${result.behaviourExampleSocial}">—</p>
+                </div>
+                <div class="behaviour-example">
+                    <span class="bex-icon">🎵</span>
+                    <p th:text="${result.behaviourExampleMusic}">—</p>
+                </div>
+                <div class="behaviour-example">
+                    <span class="bex-icon">🗺️</span>
+                    <p th:text="${result.behaviourExampleMaps}">—</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="info-card">
+                <h3>Wat je had kunnen doen</h3>
+                <ul class="alt-list">
+                    <li>
+                        <span class="alt-icon">📚</span>
+                        <span><strong th:text="${result.booksPerYear}">0</strong> boeken lezen (gem. 6 uur per boek)</span>
+                    </li>
+                    <li>
+                        <span class="alt-icon">🗣️</span>
+                        <span>Een nieuwe taal leren — je hebt <strong th:text="${result.languageFactor}">0</strong>× de benodigde tijd</span>
+                    </li>
+                    <li>
+                        <span class="alt-icon">👥</span>
+                        <span><strong th:text="${result.realConversations}">0</strong> echte gesprekken van 2 uur voeren</span>
+                    </li>
+                    <li>
+                        <span class="alt-icon">🏃</span>
+                        <span><strong th:text="${result.runSessions}">0</strong> hardloopsessies van 45 minuten</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>Wat Big Tech over jou verzamelt</h3>
+                <table class="data-table">
+                    <tr>
+                        <td>Locatiepunten per jaar</td>
+                        <td class="data-val" th:text="${#numbers.formatInteger(result.locationPoints, 1, 'POINT')}">—</td>
+                    </tr>
+                    <tr>
+                        <td>Gedragskenmerken in jouw profiel</td>
+                        <td class="data-val" th:text="${result.adProfiles} + '+'">—</td>
+                    </tr>
+                    <tr>
+                        <td>Schermgebeurtenissen per jaar(taps/scrolls)</td>
+                        <td class="data-val" th:text="${#numbers.formatInteger(result.screenEvents, 1, 'POINT')}">—</td>
+                    </tr>
+                    <tr>
+                        <td>Advertentie-inkomsten van jou (per jaar)</td>
+                        <td class="data-val" th:text="${result.adRevenueRange}">—</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- ERVARINGSBLOK -->
+        <div class="experience-block">
+            <div class="experience-header">
+                <span class="experience-icon">💬</span>
+                <div>
+                    <h3>Wat doet dit met jou?</h3>
+                    <p class="experience-intro">Deel je reactie anoniem. Jouw ervaring helpt anderen bewuster te worden.</p>
+                </div>
+            </div>
+
+            <!-- Stap 1: bewustzijn -->
+            <div class="exp-step" id="step-1">
+                <p class="exp-question">Heeft deze calculator iets bij je losgemaakt?</p>
+                <div class="exp-feelings">
+                    <button type="button" class="feeling-btn" onclick="selectFeeling(this, 'shocked')">😮 Geschokt</button>
+                    <button type="button" class="feeling-btn" onclick="selectFeeling(this, 'worried')">😟 Ongerust</button>
+                    <button type="button" class="feeling-btn" onclick="selectFeeling(this, 'motivated')">💪 Gemotiveerd</button>
+                    <button type="button" class="feeling-btn" onclick="selectFeeling(this, 'neutral')">😐 Al geweten</button>
+                    <button type="button" class="feeling-btn" onclick="selectFeeling(this, 'skeptical')">🤔 Skeptisch</button>
+                </div>
+                <textarea class="exp-textarea" id="exp-text" placeholder="Optioneel: vertel in eigen woorden wat dit met je doet..." maxlength="500"></textarea>
+                <button type="button" class="btn-step" id="btn-step1" onclick="goStep2()">Volgende →</button>
+            </div>
+
+            <!-- Stap 2: intentie -->
+            <div class="exp-step" id="step-2" style="display:none;">
+                <p class="exp-question">Ben je van plan digitaal minimalistischer te leven?</p>
+                <div class="exp-yesno">
+                    <button type="button" class="yesno-btn yesno-yes" onclick="selectIntent(this, 'yes')">✅ Ja, ik ga ermee aan de slag</button>
+                    <button type="button" class="yesno-btn yesno-maybe" onclick="selectIntent(this, 'maybe')">🤷 Misschien, ik denk erover na</button>
+                    <button type="button" class="yesno-btn yesno-no" onclick="selectIntent(this, 'no')">❌ Nee, voor mij hoeft het niet</button>
+                </div>
+                <button type="button" class="btn-primary" id="btn-submit" onclick="submitExperience()" style="margin-top:1.25rem;">Versturen</button>
+            </div>
+
+            <!-- Bedankt -->
+            <div class="exp-thankyou" id="exp-thankyou" style="display:none;">
+                <span class="thankyou-icon">🙏</span>
+                <p><strong>Bedankt voor je reactie.</strong></p>
+                <p class="thankyou-sub" id="thankyou-msg">—</p>
+            </div>
+        </div>
+
+        <div class="cta-block">
+            <p>Klaar om iets te veranderen?</p>
+            <a th:href="@{/tips}" class="btn-secondary">Bekijk concrete stappen →</a>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>Een bewustwordingsinterventie over ontmenselijking door Big Tech.</p>
+</footer>
+
+<script th:src="@{/js/calculator.js}"></script>
+</body>
+</html>

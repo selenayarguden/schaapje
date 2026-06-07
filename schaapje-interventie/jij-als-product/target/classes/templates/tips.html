@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wat kan ik doen? — Jij Als Product</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/schaap.svg}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="nav">
+    <a class="nav-logo" th:href="@{/}">
+        <img th:src="@{/images/schaap.svg}" alt="Vee logo" height="70">
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+    <div class="nav-links" id="nav-links">
+        <a th:href="@{/}" th:classappend="${activePage == 'home'} ? 'active'">Calculator</a>
+        <a th:href="@{/tips}" th:classappend="${activePage == 'tips'} ? 'active'">Wat kan ik doen?</a>
+        <a th:href="@{/over}" th:classappend="${activePage == 'over'} ? 'active'">Probleem</a>
+    </div>
+</nav>
+
+<main>
+    <section class="hero hero--small">
+        <div class="hero-tag">Verandering</div>
+        <h1>Jouw tijd terug<br>van Big Tech</h1>
+    </section>
+
+    <section class="tips-section">
+
+        <div class="tip-level">
+            <div class="level-badge level-badge--easy">Niveau 1 — Vandaag te doen</div>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">🔕</div>
+                    <h3>Zet notificaties uit</h3>
+                    <p>Zet alle sociale media notificaties uit je mist niets essentieels.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">⬛</div>
+                    <h3>Grijsscherm modus</h3>
+                    <p>Kleur is verslavend ontworpen. Grijsscherm maakt je telefoon minder aantrekkelijk om te pakken.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">📵</div>
+                    <h3>Apps van homescreen</h3>
+                    <p>Verplaats sociale media apps van je homescreen naar een map.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-level">
+            <div class="level-badge level-badge--medium">Niveau 2 — Deze week</div>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">⏱️</div>
+                    <h3>Schermtijdlimieten</h3>
+                    <p>Stel harde daglimieten in per app. Gebruik ingebouwde tools op iOS (Schermtijd) of Android (Digitaal welzijn).</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🌅</div>
+                    <h3>Telefoonvrije ochtend</h3>
+                    <p>Eerste 30 minuten na het wakker worden: geen telefoon.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🔍</div>
+                    <h3>Gebruik privébrowser</h3>
+                    <p>Een privébrowser onthoudt niets na je sessie: geen geschiedenis, geen cookies, geen opgeslagen zoekopdrachten.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-level">
+            <div class="level-badge level-badge--hard">Niveau 3 — Structurele verandering</div>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">🗑️</div>
+                    <h3>Verwijder apps</h3>
+                    <p>Verwijder de apps die je het meest gebruiken maar het minst bijdragen.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🛡️</div>
+                    <h3>Privacy tools</h3>
+                    <p>Gebruik een VPN, verwijder Google-account van je telefoon.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">📖</div>
+                    <h3>Lees "The Age of Surveillance Capitalism"</h3>
+                    <p>Shoshan Zuboff is zogezegd "The true prophet of the information age".</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="cta-block">
+            <p>Nog niet berekend hoeveel jij weggeeft?</p>
+            <a th:href="@{/}" class="btn-secondary">Ga naar de calculator →</a>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>Een bewustwordingsinterventie over ontmenselijking door Big Tech.</p>
+</footer>
+
+<script th:src="@{/js/calculator.js}"></script>
+</body>
+</html>
